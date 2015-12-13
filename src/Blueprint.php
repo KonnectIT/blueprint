@@ -106,7 +106,7 @@ class Blueprint
 
         $contents .= $this->getFormat();
         $contents .= $this->line(2);
-        $contents .= 'Host: ' . \Config::get('api.protocol') . '://' . \Config::get('api.domain') . '/' . \Config::get('api.prefix');
+        $contents .= $this->getHost();
         $contents .= $this->line(2);
         $contents .= sprintf('# %s', $name);
         $contents .= $this->line(2);
@@ -407,4 +407,21 @@ class Blueprint
     {
         return 'FORMAT: 1A';
     }
+    
+    /**
+     * Get the API Blueprint Host data for metadata information
+     * 
+     * @return string
+     */
+    protected function getHost()
+    {
+        $uriArray = [
+            \Config::get('api.protocol') . '://' . \Config::get('api.domain')
+        ];
+        if (!is_null(\Config::get('api.prefix'))) {
+            $uriArray[] = \Config::get('api.prefix');
+        }
+        return 'Host: ' . implode('/', $uriArray);
+    }
+
 }
